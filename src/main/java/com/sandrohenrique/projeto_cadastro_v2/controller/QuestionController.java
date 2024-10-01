@@ -3,6 +3,7 @@ package com.sandrohenrique.projeto_cadastro_v2.controller;
 import com.sandrohenrique.projeto_cadastro_v2.domain.Question;
 import com.sandrohenrique.projeto_cadastro_v2.requests.QuestionPostRequestBody;
 import com.sandrohenrique.projeto_cadastro_v2.service.QuestionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("question")
+@RequestMapping("questions")
 @RequiredArgsConstructor
 public class QuestionController {
     private final QuestionService questionService;
@@ -27,7 +28,7 @@ public class QuestionController {
     }
 
     @PostMapping
-    public ResponseEntity<Question> saveQuestion(@RequestBody QuestionPostRequestBody questionPostRequestBody) {
+    public ResponseEntity<Question> saveQuestion(@RequestBody @Valid QuestionPostRequestBody questionPostRequestBody) { // O @Valid é para o spring fazer a validação automaticamente
         return new ResponseEntity<>(questionService.save(questionPostRequestBody), HttpStatus.CREATED);
     }
 
