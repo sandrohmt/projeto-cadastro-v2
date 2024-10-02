@@ -31,6 +31,19 @@ public class UserController {
     @GetMapping(path = "byName")
     public ResponseEntity<List<User>> findByName(@RequestParam (required = false) String name) {
         return new ResponseEntity<>(userService.findByName(name), HttpStatus.OK);
+        // http://localhost:8080/users/byName?name=luc
+    }
+
+    @GetMapping(path = "byEmail")
+    public ResponseEntity<List<User>> findByEmail(@RequestParam (required = false) String email) {
+        return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
+        // http://localhost:8080/users/byEmail?email=gmail
+    }
+
+    @GetMapping(path = "byAge")
+    public ResponseEntity<List<User>> findByEmail(@RequestParam (required = false) Integer age) {
+        return new ResponseEntity<>(userService.findByAge(age), HttpStatus.OK);
+        // http://localhost:8080/users/byAge?age=21
     }
 
 

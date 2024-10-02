@@ -1,6 +1,5 @@
 package com.sandrohenrique.projeto_cadastro_v2.service;
 
-import com.sandrohenrique.projeto_cadastro_v2.domain.Question;
 import com.sandrohenrique.projeto_cadastro_v2.domain.User;
 import com.sandrohenrique.projeto_cadastro_v2.exception.BadRequestException;
 import com.sandrohenrique.projeto_cadastro_v2.mapper.UserMapper;
@@ -40,6 +39,14 @@ public class UserService {
 
     public List<User> findByName(String name) {
         return userRepository.findByName(name);
+    }
+
+    public List<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public List<User> findByAge(Integer age) {
+        return userRepository.findByAge(age);
     }
 
     public void delete(Long id) {
