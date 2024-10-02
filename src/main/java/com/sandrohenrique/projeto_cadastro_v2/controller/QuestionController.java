@@ -38,3 +38,5 @@ public class QuestionController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Não coloquei os dois argumentos dentro do ResponseEntity pois o delete retorna void
     }
 }
+
+// Renomear os métodos daqui

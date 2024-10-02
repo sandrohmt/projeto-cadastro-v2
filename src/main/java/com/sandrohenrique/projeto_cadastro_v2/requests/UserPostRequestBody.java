@@ -2,10 +2,12 @@ package com.sandrohenrique.projeto_cadastro_v2.requests;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 public class UserPostRequestBody {
     @NotEmpty(message = "The user cannot be empty")
+    @Length(min = 10, max = 50)
     private String name;
     @NotEmpty(message = "The email cannot be empty")
     @Email
