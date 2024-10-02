@@ -23,7 +23,7 @@ public class UserController {
         return new ResponseEntity<>(userService.listAll(), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "{id}")
     public ResponseEntity<User> findByName(@PathVariable  Long id) {
         return new ResponseEntity<>(userService.findByIdOrThrowBadRequestException(id), HttpStatus.OK);
     }
@@ -39,7 +39,7 @@ public class UserController {
         return new ResponseEntity<>(userService.save(userPostRequestBody), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

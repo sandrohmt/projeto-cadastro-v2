@@ -22,7 +22,7 @@ public class QuestionController {
         return new ResponseEntity<>(questionService.listAll(), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "{id}")
     public ResponseEntity <Question> findById(@PathVariable Long id) {
         return new ResponseEntity<>(questionService.findByIdOrThrowBadRequestException(id), HttpStatus.OK);
     }
