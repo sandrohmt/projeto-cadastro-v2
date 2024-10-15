@@ -23,7 +23,7 @@ public class UserPostRequestBody {
     @Max(120)
     private Integer age;
     @NotNull(message = "The height cannot be null") // NotNull pois int e floats ja nao podem ser vazios
-    @Min(1)
-    @Max(3)
+    @DecimalMin(value = "0.6")
+    @DecimalMax(value = "2.6")
     private Float height;
 }

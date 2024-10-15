@@ -1,6 +1,5 @@
 package com.sandrohenrique.projeto_cadastro_v2.domain;
 
-import com.sandrohenrique.projeto_cadastro_v2.requests.UserPostRequestBody;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -30,8 +29,8 @@ public class User {
     @Max(120)
     private Integer age;
     @NotNull(message = "The height cannot be null") // NotNull pois int e floats ja nao podem ser vazios
-    @Min(1)
-    @Max(3)
+    @DecimalMin(value = "0.6")
+    @DecimalMax(value = "2.6")
     private Float height;
 
 }
