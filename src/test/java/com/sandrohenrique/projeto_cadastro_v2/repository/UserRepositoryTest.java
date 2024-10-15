@@ -1,18 +1,52 @@
 package com.sandrohenrique.projeto_cadastro_v2.repository;
 
+import com.sandrohenrique.projeto_cadastro_v2.domain.User;
+import com.sandrohenrique.projeto_cadastro_v2.util.UserCreator;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
-@DataJpaTest // Vai indicar pro spring que essa é uma classe de teste que vai testar um repository JPA
-@ActiveProfiles("test") // Isso serve para o spring usar o application-test e não o application normal
-class UserRepositoryTest { // Testes em repositórios são necessários apenas nos que a gente fez a @Query manualmente, os outros na teoria o JPA já testou automaticamente
-// Não é uma boa ideia usar o mesmo banco de dados da produção para os testes unitários. É necessário criar outro banco de dados apenas para esses testes.
-// Uma boa solução é usar um banco de dados em memória, como o H2
+@DataJpaTest()
+class UserRepositoryTest {
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
-    void findByName() {
+    @DisplayName("findByName returns a list of user when successful")
+    void findByName_ReturnsListOfUser_WhenSuccessful() {
+        User userToBeSaved = UserCreator.createUserToBeSaved();
 
+        User userSaved = this.userRepository.save(userToBeSaved);
+
+        String name = userSaved.getName();
+
+        List<User> users = this.userRepository.findByName(name);
+
+        Assertions.assertThat(users)
+                .isNotNull()
+                .isNotEmpty()
+                .contains(userSaved);
+    }
+
+    @Test
+    @DisplayName("findByEmail returns a list of user when successful")
+    void findByEmail_ReturnsListOfUser_WhenSuccessful() {
+        User userToBeSaved = UserCreator.createUserToBeSaved();
+
+        User userSaved = this.userRepository.save(userToBeSaved);
+
+        String email = userSaved.getEmail();
+
+        List<User> users = this.userRepository.findByEmail(email);
+
+        Assertions.assertThat(users)
+                .isNotNull()
+                .isNotEmpty()
+                .contains(userSaved);
     }
 }
