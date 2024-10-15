@@ -1,9 +1,13 @@
 package com.sandrohenrique.projeto_cadastro_v2.requests;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Data
 public class UserPostRequestBody {
     @NotEmpty(message = "The user cannot be empty")

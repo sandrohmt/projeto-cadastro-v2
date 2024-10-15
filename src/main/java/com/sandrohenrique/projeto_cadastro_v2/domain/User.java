@@ -1,5 +1,6 @@
 package com.sandrohenrique.projeto_cadastro_v2.domain;
 
+import com.sandrohenrique.projeto_cadastro_v2.requests.UserPostRequestBody;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,4 +23,5 @@ public class User {
     private String email;
     private Integer age;
     private Float height;
+
 }
