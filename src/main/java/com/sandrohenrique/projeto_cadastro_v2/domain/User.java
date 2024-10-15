@@ -1,10 +1,7 @@
 package com.sandrohenrique.projeto_cadastro_v2.domain;
 
 import com.sandrohenrique.projeto_cadastro_v2.requests.UserPostRequestBody;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // Para o builder funcionar
 @NoArgsConstructor
 @Entity
+@Table(name = "`user`")
 @Builder
 public class User {
     @Id
