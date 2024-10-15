@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity<User> findByName(@PathVariable  Long id) {
+    public ResponseEntity<User> findById(@PathVariable  Long id) {
         return new ResponseEntity<>(userService.findByIdOrThrowBadRequestException(id), HttpStatus.OK);
     }
 
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping(path = "byAge")
-    public ResponseEntity<List<User>> findByEmail(@RequestParam (required = false) Integer age) {
+    public ResponseEntity<List<User>> findByage(@RequestParam (required = false) Integer age) {
         return new ResponseEntity<>(userService.findByAge(age), HttpStatus.OK);
         // http://localhost:8080/users/byAge?age=21
     }
