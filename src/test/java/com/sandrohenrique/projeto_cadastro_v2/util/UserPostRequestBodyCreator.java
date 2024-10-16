@@ -11,4 +11,12 @@ public class UserPostRequestBodyCreator { // Usado para criar instâncias da ent
                 .height(UserCreator.createUserToBeSaved().getHeight())
                 .build();
     }
+
+    public static UserPostRequestBody createUserPostRequestBodyWithoutName() {
+        return UserPostRequestBody.builder()
+                .email(UserCreator.createUserToBeSaved().getEmail())
+                .age(UserCreator.createUserToBeSaved().getAge())
+                .height(UserCreator.createUserToBeSaved().getHeight())
+                .build();
+    }
 }

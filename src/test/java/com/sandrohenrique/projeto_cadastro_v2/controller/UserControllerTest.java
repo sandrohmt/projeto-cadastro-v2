@@ -169,7 +169,7 @@ class UserControllerTest {
     void findByAge_ReturnsListOfUser_WhenSuccessful() {
         Integer expectedAge = UserCreator.createValidUser().getAge();
 
-        List<User> users = userController.findByage(expectedAge).getBody();
+        List<User> users = userController.findByAge(expectedAge).getBody();
 
         Assertions.assertThat(users)
                 .isNotNull()
@@ -184,7 +184,7 @@ class UserControllerTest {
         BDDMockito.when(userServiceMock.findByAge(ArgumentMatchers.anyInt()))
                 .thenReturn(Collections.emptyList());
 
-        List<User> users = userController.findByage(18).getBody();
+        List<User> users = userController.findByAge(18).getBody();
 
         Assertions.assertThat(users)
                 .isNotNull()

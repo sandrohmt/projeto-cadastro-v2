@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping(path = "byAge")
-    public ResponseEntity<List<User>> findByage(@RequestParam (required = false) Integer age) {
+    public ResponseEntity<List<User>> findByAge(@RequestParam (required = false) Integer age) {
         return new ResponseEntity<>(userService.findByAge(age), HttpStatus.OK);
         // http://localhost:8080/users/byAge?age=21
     }
@@ -49,7 +49,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserPostRequestBody userPostRequestBody) {
-        return new ResponseEntity<>(userService.save(userPostRequestBody), HttpStatus.OK);
+        return new ResponseEntity<>(userService.save(userPostRequestBody), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "{id}")
