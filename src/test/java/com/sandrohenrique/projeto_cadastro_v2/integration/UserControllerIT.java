@@ -5,9 +5,12 @@ import com.sandrohenrique.projeto_cadastro_v2.repository.UserRepository;
 import com.sandrohenrique.projeto_cadastro_v2.requests.UserPostRequestBody;
 import com.sandrohenrique.projeto_cadastro_v2.util.UserCreator;
 import com.sandrohenrique.projeto_cadastro_v2.util.UserPostRequestBodyCreator;
+import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
@@ -30,6 +34,15 @@ class UserControllerIT {
 
     @Autowired
     private UserRepository userRepository;
+
+    static Stream<String> endpointsProvider() { // Reune todos os endpoits necessarios para serem testados no teste parametrizado
+        return Stream.of(
+                "/users",
+                "/users/byName?name=test",
+                "/users/byEmail?email=test@gmail.com",
+                "/users/byAge?age=18"
+        );
+    }
 
     @Test
     @DisplayName("listAll returns list of user when successful")
@@ -57,11 +70,12 @@ class UserControllerIT {
         Assertions.assertThat(expectedHeight).isEqualTo(users.get(0).getHeight());
     }
 
-    @Test
-    @DisplayName("listAll returns an empty list when no users are found")
-    void listAll_ReturnsAnEmptyList_WhenNoUsersAreFound() {
+    @ParameterizedTest
+    @MethodSource("endpointsProvider")
+    @DisplayName("returns an empty list when no users are found") // Esse método testa os casos ruins de listAll, findByName, findByEmail e findByAge
+    void returnsAnEmptyList_WhenNoUsersAreFound(String endpoint) {
         List<User> users = testRestTemplate.exchange(
-                "/users",
+                endpoint,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<User>>() {
@@ -86,16 +100,6 @@ class UserControllerIT {
         Assertions.assertThat(user.getId()).isNotNull().isEqualTo(expectedId);
     }
 
-//    @Test
-//    @DisplayName("findById throw BadRequestException when user is not found")
-//    void findById_ThrowBadRequestException_WhenUserIsNotFound() {
-//        BDDMockito.when(userServiceMock.findByIdOrThrowBadRequestException(ArgumentMatchers.anyLong()))
-//                .thenThrow(BadRequestException.class);
-//
-//        Assertions.assertThatThrownBy(() -> userController.findById(1L))
-//                .isInstanceOf(BadRequestException.class);
-//    }
-//
     @Test
     @DisplayName("findByName returns list of user when successful")
     void findByName_ReturnsListOfUser_WhenSuccessful() {
@@ -120,10 +124,16 @@ class UserControllerIT {
     }
 
     @Test
-    @DisplayName("findByName returns an empty list when user is not found")
-    void findByName_ReturnsEmptyList_WhenUserIsNotFound() {
+    @DisplayName("findByEmail returns list of user when successful")
+    void findByEmail_ReturnsListOfUser_WhenSuccessful() {
+        User savedUser = userRepository.save(UserCreator.createUserToBeSaved());
+
+        String expectedEmail = savedUser.getEmail();
+
+        String url = String.format("/users/byEmail?email=%s", expectedEmail);
+
         List<User> users = testRestTemplate.exchange(
-                "/users/byName?name=test",
+                url,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<User>>() {
@@ -131,63 +141,34 @@ class UserControllerIT {
 
         Assertions.assertThat(users)
                 .isNotNull()
-                .isEmpty();
+                .hasSize(1);
+
+        Assertions.assertThat(users.get(0).getEmail()).isNotNull().isEqualTo(expectedEmail);
     }
 
-//    @Test
-//    @DisplayName("findByEmail returns list of user when successful")
-//    void findByEmail_ReturnsListOfUser_WhenSuccessful() {
-//        String expectedEmail = UserCreator.createValidUser().getEmail();
-//
-//        List<User> users = userController.findByEmail(expectedEmail).getBody();
-//
-//        Assertions.assertThat(users)
-//                .isNotNull()
-//                .hasSize(1);
-//
-//        Assertions.assertThat(users.get(0).getEmail()).isNotNull().isEqualTo(expectedEmail);
-//    }
-//
-//    @Test
-//    @DisplayName("findByEmail returns an empty list when user is not found")
-//    void findByEmail_ReturnsEmptyList_WhenUserIsNotFound() {
-//        BDDMockito.when(userServiceMock.findByEmail(ArgumentMatchers.anyString()))
-//                .thenReturn(Collections.emptyList());
-//
-//        List<User> users = userController.findByEmail("user@gmail.com").getBody();
-//
-//        Assertions.assertThat(users)
-//                .isNotNull()
-//                .isEmpty();
-//    }
-//
-//    @Test
-//    @DisplayName("findByAge returns list of user when successful")
-//    void findByAge_ReturnsListOfUser_WhenSuccessful() {
-//        Integer expectedAge = UserCreator.createValidUser().getAge();
-//
-//        List<User> users = userController.findByAge(expectedAge).getBody();
-//
-//        Assertions.assertThat(users)
-//                .isNotNull()
-//                .hasSize(1);
-//
-//        Assertions.assertThat(users.get(0).getAge()).isNotNull().isEqualTo(expectedAge);
-//    }
-//
-//    @Test
-//    @DisplayName("findByAge returns an empty list when user is not found")
-//    void findByAge_ReturnsEmptyList_WhenUserIsNotFound() {
-//        BDDMockito.when(userServiceMock.findByAge(ArgumentMatchers.anyInt()))
-//                .thenReturn(Collections.emptyList());
-//
-//        List<User> users = userController.findByAge(18).getBody();
-//
-//        Assertions.assertThat(users)
-//                .isNotNull()
-//                .isEmpty();
-//    }
-//
+    @Test
+    @DisplayName("findByAge returns list of user when successful")
+    void findByAge_ReturnsListOfUser_WhenSuccessful() {
+        User savedUser = userRepository.save(UserCreator.createUserToBeSaved());
+
+        Integer expectedAge = savedUser.getAge();
+
+        String url = String.format("/users/byAge?age=%s", expectedAge);
+
+        List<User> users = testRestTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<User>>() {
+                }).getBody();
+
+        Assertions.assertThat(users)
+                .isNotNull()
+                .hasSize(1);
+
+        Assertions.assertThat(users.get(0).getAge()).isNotNull().isEqualTo(expectedAge);
+    }
+
     @Test
     @DisplayName("save returns user when successful")
     void save_ReturnsUser_WhenSuccessful() {
@@ -200,19 +181,20 @@ class UserControllerIT {
         Assertions.assertThat(userResponseEntity.getBody()).isNotNull();
         Assertions.assertThat(userResponseEntity.getBody().getId()).isNotNull();
     }
-//
-//    @Test
-//    @DisplayName("save throws ConstraintViolationException when user has invalid data")
-//    void save_ThrowsConstraintViolationException_WhenUserHasInvalidData() {
-//        BDDMockito.when(userServiceMock.save(ArgumentMatchers.any(UserPostRequestBody.class)))
-//                .thenThrow(ConstraintViolationException.class);
-//
-//        UserPostRequestBody userPostRequestBody = UserPostRequestBodyCreator.createUserPostRequestBody();
-//
-//        Assertions.assertThatThrownBy(() -> userController.save(userPostRequestBody))
-//                .isInstanceOf(ConstraintViolationException.class);
-//    }
-//
+
+    @Test
+    @DisplayName("save throws ConstraintViolationException when user has invalid data")
+    void save_ThrowsConstraintViolationException_WhenUserHasInvalidData() {
+        UserPostRequestBody userPostRequestBody = UserPostRequestBodyCreator.createUserPostRequestBodyWithoutName();
+
+        User user = testRestTemplate.postForEntity("/users", userPostRequestBody, User.class).getBody();
+
+        Assertions.assertThat(user).isNotNull();
+
+        Assertions.assertThatThrownBy(() -> userRepository.save(user))
+                .isInstanceOf(ConstraintViolationException.class);
+    }
+
     @Test
     @DisplayName("delete removes user when successful")
     void delete_RemovesUser_WhenSuccessFul() {
@@ -231,13 +213,4 @@ class UserControllerIT {
         Assertions.assertThat(userResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
-//    @Test
-//    @DisplayName("delete throws ConstraintViolationException when user is not found")
-//    void delete_ThrowsConstraintViolationException_WhenUserIsNotFound() {
-//        BDDMockito.doThrow(BadRequestException.class)
-//                .when(userServiceMock).delete(ArgumentMatchers.anyLong());
-//
-//        Assertions.assertThatThrownBy(() -> userController.delete(1L))
-//                .isInstanceOf(BadRequestException.class);
-//    }
 }
