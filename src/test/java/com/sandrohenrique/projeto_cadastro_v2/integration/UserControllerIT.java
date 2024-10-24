@@ -35,6 +35,7 @@ class UserControllerIT {
     @Autowired
     private UserRepository userRepository;
 
+
     static Stream<String> endpointsProvider() { // Reune todos os endpoits necessarios para serem testados no teste parametrizado
         return Stream.of(
                 "/users",
