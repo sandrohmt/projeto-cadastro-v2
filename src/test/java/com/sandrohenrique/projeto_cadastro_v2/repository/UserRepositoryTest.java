@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 
-@DataJpaTest()
+@DataJpaTest
 class UserRepositoryTest {
 
     @Autowired
