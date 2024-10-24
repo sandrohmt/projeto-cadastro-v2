@@ -7,7 +7,6 @@ import com.sandrohenrique.projeto_cadastro_v2.repository.UserRepository;
 import com.sandrohenrique.projeto_cadastro_v2.requests.UserPostRequestBody;
 import com.sandrohenrique.projeto_cadastro_v2.util.UserCreator;
 import com.sandrohenrique.projeto_cadastro_v2.util.UserPostRequestBodyCreator;
-import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
